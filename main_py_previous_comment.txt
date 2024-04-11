@@ -1,0 +1,498 @@
+"""
+Get DFCX Agent Structure in BQ tables
+
+Pub/Sub topic: agent-structure-topic
+
+Usage example (for golden chat stable in att-ccai-chat-dev):
+
+gcloud pubsub topics publish agent-structure-topic --message='{"agent_id": "projects/att-ccai-chat-dev/locations/us-central1/agents/e8d8e88a-fa30-4b91-812e-52f8296db2f8"}'
+
+Dataset:
+
+agent_structure
+
+Tables:
+
+entity_types
+flows
+intents
+pages
+parameters
+training_phrases
+transition_route_groups
+transition_routes
+webhooks
+
+Schemas:
+
+entity_types
+date:DATETIME,
+agentId:STRING,
+agentName:STRING,
+entityTypeId:STRING,
+entityTypeName:STRING,
+entity:STRING,
+synonym:STRING
+
+flows
+[
+    {
+        "name": "date",
+        "type": "DATETIME",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "agentId",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "agentName",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "flowId",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "flowName",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "pages",
+        "type": "STRING",
+        "mode": "REPEATED"
+    }
+]
+
+intents
+[
+    {
+        "name": "date",
+        "type": "DATETIME",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "agentId",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "agentName",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "intentId",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "intentName",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "description",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "parameters",
+        "type": "STRING",
+        "mode": "REPEATED"
+    },
+    {
+        "name": "labels",
+        "type": "STRING",
+        "mode": "REPEATED"
+    }
+]
+
+pages
+[
+    {
+        "name": "date",
+        "type": "DATETIME",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "agentId",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "agentName",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "flowId",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "flowName",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "pageId",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "pageName",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "webhookId",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "webhookName",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "webhookTag",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "fulfillment",
+        "type": "STRING",
+        "mode": "REPEATED"
+    },
+    {
+        "name": "partialResponse",
+        "type": "BOOLEAN",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "parameterPresets",
+        "type": "STRING",
+        "mode": "REPEATED"
+    },
+    {
+        "name": "parameters",
+        "type": "STRING",
+        "mode": "REPEATED"
+    },
+    {
+        "name": "routes",
+        "type": "STRING",
+        "mode": "REPEATED"
+    },
+    {
+        "name": "routeGroups",
+        "type": "STRING",
+        "mode": "REPEATED"
+    }
+]
+
+parameters
+[
+    {
+        "name": "date",
+        "type": "DATETIME",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "agentId",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "agentName",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "flowId",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "flowName",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "pageId",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "pageName",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "parameterId",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "parameterName",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "entityId",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "entityName",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "webhookId",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "webhookName",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "webhookTag",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "required",
+        "type": "BOOLEAN",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "isList",
+        "type": "BOOLEAN",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "redactInLog",
+        "type": "BOOLEAN",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "fulfillment",
+        "type": "STRING",
+        "mode": "REPEATED"
+    },
+    {
+        "name": "partialResponse",
+        "type": "BOOLEAN",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "parameterPresets",
+        "type": "STRING",
+        "mode": "REPEATED"
+    },
+    {
+        "name": "routes",
+        "type": "STRING",
+        "mode": "REPEATED"
+    }
+]
+
+training_phrases
+date:DATETIME,
+agentId:STRING,
+agentName:STRING,
+intentId:STRING,
+intentName:STRING,
+phrase:STRING,
+annotatedPhrase:STRING
+# To be added later?
+#active
+#head_intent
+#flows
+
+transition_route_groups
+[
+    {
+        "name": "date",
+        "type": "DATETIME",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "agentId",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "agentName",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "flowId",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "flowName",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "routeGroupId",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "routeGroupName",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "routes",
+        "type": "STRING",
+        "mode": "REPEATED"
+    }
+]
+
+transition_routes
+[
+    {
+        "name": "date",
+        "type": "DATETIME",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "agentId",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "agentName",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "flowId",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "flowName",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "pageId",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "pageName",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "transitionRouteId",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "routeGroupId",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "routeGroupName",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "intentId",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "intentName",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "parameterId",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "parameterName",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "targetPageId",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "targetPageName",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "webhookId",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "webhookName",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "webhookTag",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "event",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "condition",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "fulfillment",
+        "type": "STRING",
+        "mode": "REPEATED"
+    },
+    {
+        "name": "partialResponse",
+        "type": "BOOLEAN",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "parameterPresets",
+        "type": "STRING",
+        "mode": "REPEATED"
+    }
+]
+
+webhooks
+date:DATETIME,
+agentId:STRING,
+agentName:STRING,
+webhookId:STRING,
+webhookName:STRING,
+timeout:STRING,
+serviceDirectory:STRING,
+url:STRING
+"""

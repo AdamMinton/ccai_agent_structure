@@ -1,0 +1,10 @@
+dfcx-scrapi
+google-cloud-dialogflow-cx
+google-cloud-bigquery
+pandas
+pandas_gbq
+numpy
+gspread
+gspread-dataframe
+tabulate
+oauth2client
