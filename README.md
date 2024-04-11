@@ -88,7 +88,7 @@ To trigger the extraction process for a specific agent, publish a message to the
 | routeGroups     | STRING       | REPEATED     |
 
 
-## Local Development - still figuring this out of how to handle between actual cloud function and local development
+## Local Development
 
 Encode your string that would be part of your Cloud Scheduler message.
 ```
