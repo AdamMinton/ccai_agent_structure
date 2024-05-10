@@ -21,6 +21,7 @@ from proto.marshal.collections.repeated import RepeatedComposite
 DFCXFlow = dfcx_types.flow.Flow
 DFCXPage = dfcx_types.page.Page
 DFCXRoute = dfcx_types.page.TransitionRoute
+DFCXCase = dfcx_types.Fulfillment.ConditionalCases.Case
 
 # logging config
 logging.basicConfig(
@@ -150,29 +151,63 @@ def parse_fulfillment(fulfillment, webhook_dict):
 
 def parse_conditional_fulfillment(conditional_response, cond_res_text='', tabs=0):
     tab_symbol = '  '
-    for i, case in enumerate(conditional_response.cases):
-        if i == 0:
-            cond_res_text += tab_symbol*tabs + 'if '
-        elif i != len(conditional_response.cases) - 1:
-            cond_res_text += tab_symbol*tabs + 'elif '
-        else:
-            cond_res_text += tab_symbol*tabs + 'else\n'
-        if getattr(case, 'condition', None):
-            cond_res_text += case.condition + '\n'
-        for content in case.case_content:
-            tabs += 1
-            if getattr(content, 'additional_cases', None):
-                # Nested conditions, use recursion (note cond_res_text side effect)
-                for additional_case in content.additional_cases.cases:
+    if isinstance(conditional_response, DFCXCase) and tabs == 0:
+        cond_res_text += tab_symbol*tabs + 'if '
+        if getattr(conditional_response, 'condition', None):
+            cond_res_text += conditional_response.condition + '\n'
+    else:
+        for i, case in enumerate(conditional_response.cases):
+            if i == 0:
+                cond_res_text += tab_symbol*tabs + 'if '
+            elif i != len(conditional_response.cases) - 1:
+                cond_res_text += tab_symbol*tabs + 'elif '
+            else:
+                cond_res_text += tab_symbol*tabs + 'else\n'
+            if getattr(case, 'condition', None):
+                cond_res_text += case.condition + '\n'
+            for content in case.case_content:
+                tabs += 1
+                if getattr(content, 'additional_cases', None):
                     parse_conditional_fulfillment(
-                        additional_case, cond_res_text, tabs)
-            elif getattr(content, 'message', None):
-                if getattr(content.message, 'text', None):
-                    # For some reason this is a list even though it can only be one thing...
-                    text_message = content.message.text.text[0]
-                    cond_res_text += tab_symbol*tabs + text_message + '\n'
-            tabs -= 1
+                        content.additional_cases, cond_res_text, tabs)
+                    # Nested conditions, use recursion (note cond_res_text side effect)
+                    # for additional_case in content.additional_cases.cases:
+                    #     parse_conditional_fulfillment_new(
+                    #         additional_case, cond_res_text, tabs)
+                elif getattr(content, 'message', None):
+                    if getattr(content.message, 'text', None):
+                        # For some reason this is a list even though it can only be one thing...
+                        text_message = content.message.text.text[0]
+                        cond_res_text += tab_symbol*tabs + text_message + '\n'
+                tabs -= 1
     return cond_res_text
+
+
+# def parse_conditional_fulfillment(conditional_response, cond_res_text='', tabs=0):
+#     tab_symbol = '  '
+#     for i, case in enumerate(conditional_response.cases):
+#         if i == 0:
+#             cond_res_text += tab_symbol*tabs + 'if '
+#         elif i != len(conditional_response.cases) - 1:
+#             cond_res_text += tab_symbol*tabs + 'elif '
+#         else:
+#             cond_res_text += tab_symbol*tabs + 'else\n'
+#         if getattr(case, 'condition', None):
+#             cond_res_text += case.condition + '\n'
+#         for content in case.case_content:
+#             tabs += 1
+#             if getattr(content, 'additional_cases', None):
+#                 # Nested conditions, use recursion (note cond_res_text side effect)
+#                 for additional_case in content.additional_cases.cases:
+#                     parse_conditional_fulfillment(
+#                         additional_case, cond_res_text, tabs)
+#             elif getattr(content, 'message', None):
+#                 if getattr(content.message, 'text', None):
+#                     # For some reason this is a list even though it can only be one thing...
+#                     text_message = content.message.text.text[0]
+#                     cond_res_text += tab_symbol*tabs + text_message + '\n'
+#             tabs -= 1
+#     return cond_res_text
 
 
 def parse_routes(route_list, agent_id, agent_name, flow_id, flow_dict, page_dict, route_group_dict, webhook_dict, intent_dict, page_id=None, route_group_id=None, parameter_id=None, parameter_name=None):
